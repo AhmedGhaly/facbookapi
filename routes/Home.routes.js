@@ -1,8 +1,13 @@
 const router = require('express').Router()
 
-router.get('/', (req, res, next) => {
-    res.send('there is no error')
-})
+const HomeController = require('../controllers/Home')
+
+router.get('/', HomeController.Home)
+
+
+
+
+
 
 
 module.exports = router
