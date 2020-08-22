@@ -8,7 +8,11 @@ const userSchema = mongoose.Schema({
     password: {
         type: String,
         require: true
-    }, 
+    },
+    posts: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'post'
+    }]
 })
 
 

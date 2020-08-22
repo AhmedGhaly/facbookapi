@@ -18,9 +18,12 @@ app.use(logger('dev'))
  
 const HomeRouter = require('./routes/Home.routes')
 const authRouter = require('./routes/auth.routes')
+const postRouter = require('./routes/post.routes')
+
 
 app.use(HomeRouter)
 app.use('/user', authRouter)
+app.use(postRouter)
 
 ////////////// server config /////////////////
 const port = process.env.PORT;
