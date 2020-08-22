@@ -67,6 +67,7 @@ exports.getAllPosts = (req, res, next) => {
     })
 }
 
+// edite post
 exports.editePost = (req, res, next) => {
    const {userId} = req
    const {postId} = req.params
