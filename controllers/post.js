@@ -66,3 +66,63 @@ exports.getAllPosts = (req, res, next) => {
         })
     })
 }
+
+exports.editePost = (req, res, next) => {
+   const {userId} = req
+   const {postId} = req.params
+   const {content} = req.body
+   User.findById(userId).then(user => {
+       if(!user) {
+            const error = new Error('invalid id')
+            error.statusCode = process.env.NOT_FOUND
+            throw error
+       }
+        if(!user.posts.find(e => e == postId)) {
+            const error = new Error('you\' not allow to do that')
+            error.statusCode = process.env.NOT_ALLLOW
+            throw error
+        }
+        return Post.findById(postId)
+   }).then(post => {
+        if(!post) {
+            const error = new Error('invalid id')
+            error.statusCode = process.env.NOT_FOUND
+            throw error
+        }
+        post.content = content
+        return post.save()
+   }).then(post => {
+       res.status(200).json({
+           message: 'done',
+           post
+       })
+   }).catch(err => {
+       console.log(err);
+   })
+}
+
+// delete post
+exports.deletePost = (req, res, next) => {
+    const {postId} = req.params
+    const {userId} = req
+    User.findById(userId).then(user => {
+        if(!user) {
+            const error = new Error('invalid id')
+            error.statusCode = process.env.NOT_FOUND
+            throw error
+        }
+        if(!user.posts.find(e => e == postId)) {
+            const error = new Error('you\' not allow to do that')
+            error.statusCode = process.env.NOT_ALLLOW
+            throw error
+        }
+        user.posts.splice(user.posts.indexOf(postId), 1)
+        return user.save()
+    }).then(user => {
+        return Post.findByIdAndDelete(postId)
+    }).then(post => {
+        res.status(200).json('done')
+    }).catch(err => {
+        console.log(err);
+    })
+}
