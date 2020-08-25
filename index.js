@@ -20,12 +20,14 @@ const HomeRouter = require('./routes/Home.routes')
 const authRouter = require('./routes/auth.routes')
 const postRouter = require('./routes/post.routes')
 const commentRouter = require('./routes/comment.routes')
+const nestedCommentRouter = require('./routes/nestedComment.routes')
 
 
 app.use(HomeRouter)
 app.use('/user', authRouter)
 app.use(postRouter)
 app.use(commentRouter)
+app.use('/nest', nestedCommentRouter)
 
 ////////////// server config /////////////////
 const port = process.env.PORT;

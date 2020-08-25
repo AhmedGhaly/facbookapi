@@ -9,7 +9,11 @@ const commentSchema = mongoose.Schema({
     post: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'post'
-    }
+    },
+    nestedComments: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'nestedComment'
+    }]
 })
 
 module.exports = mongoose.model('comment', commentSchema)
