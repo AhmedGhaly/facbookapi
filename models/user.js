@@ -1,6 +1,11 @@
 const mongoose = require('mongoose')
 
 const userSchema = mongoose.Schema({
+    /*
+        username
+        name
+        picture
+    */
     email: {
         type: String,
         require: true
@@ -12,7 +17,11 @@ const userSchema = mongoose.Schema({
     posts: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'post'
-    }]
+    }],
+    friends: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user'
+    }],
 })
 
 
