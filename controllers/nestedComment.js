@@ -5,10 +5,15 @@ exports.createComment = (req, res, next) => {
     const {content} = req.body
     const {commentId} = req.params
     const {userId} = req
-    let theNestedComment
+    let theNestedComment, imageUrl
+    if(!req.file)
+        imageUrl = null
+    else
+        imageUrl = req.file.path
     const newNestedComment = new NestedComment({
         content,
         creator: userId,
+        imageUrl,
         comment: commentId 
     })
     newNestedComment.save().then(nestedComment => {
@@ -81,6 +86,11 @@ exports.editeNestedComment = (req, res, next) => {
             throw error
         }
         nestedComment.content = comment
+        if(req.file) {
+            if(nestedComment.imageUrl != null)
+                clearImage(nestedComment.imageUrl)
+            nestedComment.imageUrl = req.file.path
+        }
         return nestedComment.save()
     }).then(nestedComment => {
         res.status(201).json({
@@ -109,6 +119,9 @@ exports.deleteNestedComment = (req, res, next) => {
         }
         return NestedComment.findByIdAndDelete(nestedCommentId)
     }).then(nestedComment => {
+        if(nestedComment.imageUrl != null){
+            clearImage(nestedComment.imageUrl)
+        }
         return Comment.findById(nestedComment.comment)
     }).then(comment => {
         comment.nestedComments.splice(comment.nestedComments.indexOf(nestedCommentId), 1)
@@ -121,3 +134,9 @@ exports.deleteNestedComment = (req, res, next) => {
         console.log(err)
     })
 }
+
+// clear the image url 
+const clearImage = filePath => {
+    filePath = path.join(__dirname, '..', filePath);
+    fs.unlink(filePath, err => console.log(err));
+};

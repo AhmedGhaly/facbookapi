@@ -1,3 +1,5 @@
+const path = require('path')
+const fs = require('fs')
 
 const User = require('../models/user')
 const Post = require('../models/post')
@@ -8,9 +10,14 @@ const Post = require('../models/post')
 exports.createPost = (req, res, next) => {
     const {content} = req.body
     const {userId} = req
-    let thePost
+    let thePost, imageUrl
+    if(!req.file)
+        imageUrl = null
+    else
+        imageUrl = req.file.path
     const newPost = new Post({
         content,
+        imageUrl,
         creator: userId
     })
     newPost.save().then(post => {
@@ -91,6 +98,11 @@ exports.editePost = (req, res, next) => {
             throw error
         }
         post.content = content
+        if(req.file) {
+            if(post.imageUrl != null)
+                clearImage(post.imageUrl)
+            post.imageUrl = req.file.path
+        }
         return post.save()
    }).then(post => {
        res.status(200).json({
@@ -122,8 +134,18 @@ exports.deletePost = (req, res, next) => {
     }).then(user => {
         return Post.findByIdAndDelete(postId)
     }).then(post => {
+        console.log(post)
+        if(post.imageUrl != null){
+            clearImage(post.imageUrl)
+        }
         res.status(200).json('done')
     }).catch(err => {
         console.log(err);
     })
 }
+
+// clear the image url 
+const clearImage = filePath => {
+    filePath = path.join(__dirname, '..', filePath);
+    fs.unlink(filePath, err => console.log(err));
+};

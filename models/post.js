@@ -1,3 +1,8 @@
+/*
+    created at
+    updated at
+*/
+
 const mongoose = require('mongoose')
 
 const postSchema = mongoose.Schema({
@@ -9,7 +14,8 @@ const postSchema = mongoose.Schema({
     comments: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'comment'
-    }]
+    }],
+    imageUrl: String
 })
 
 module.exports = mongoose.model('post', postSchema)

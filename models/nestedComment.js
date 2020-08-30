@@ -9,7 +9,8 @@ const nestedCommentSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
     },
-    content: String
+    content: String,
+    imageUrl: String
 
 })
 

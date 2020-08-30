@@ -7,10 +7,15 @@ exports.createComment = (req, res, next) => {
     const {postId} = req.params
     const {userId} = req
     const {comment} = req.body
-    let theComment
+    let theComment, imageUrl
+    if(!req.file)
+        imageUrl = null
+    else
+        imageUrl = req.file.path
     const newComment = new Comment({
         creator: userId,
         comment,
+        imageUrl,
         post: postId
     })
     newComment.save().then(comment => {
@@ -81,6 +86,11 @@ exports.editeComment = (req, res, next) => {
             throw error
         }
         comm.comment = comment
+        if(req.file) {
+            if(comm.imageUrl != null)
+                clearImage(comm.imageUrl)
+            comm.imageUrl = req.file.path
+        }
         return comm.save()
     }).then(comment => {
         res.status(200).json({
@@ -112,7 +122,17 @@ exports.deleteComment = (req, res, next) => {
     }).then(post => {
         return Comment.findByIdAndDelete(commentId)
     }).then(comment => {
+        if(comment.imageUrl != null){
+            clearImage(comment.imageUrl)
+        }
         res.status(200).json('done')
     })
 
 }
+
+
+// clear the image url 
+const clearImage = filePath => {
+    filePath = path.join(__dirname, '..', filePath);
+    fs.unlink(filePath, err => console.log(err));
+};

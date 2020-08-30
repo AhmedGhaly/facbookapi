@@ -22,6 +22,12 @@ const userSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
     }],
+    blockList: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user'
+    }],
+},{
+    timestamps: true
 })
 
 

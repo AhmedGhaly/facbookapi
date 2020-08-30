@@ -13,7 +13,8 @@ const commentSchema = mongoose.Schema({
     nestedComments: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'nestedComment'
-    }]
+    }],
+    imageUrl: String
 })
 
 module.exports = mongoose.model('comment', commentSchema)
